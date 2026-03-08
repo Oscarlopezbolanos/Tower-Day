@@ -28,6 +28,7 @@ The lab network is isolated using VirtualBox Host-Only networking and managed th
 ## 2. Lab Architecture
 
 Windows Host
+
                   (Management PC)
                          │
                          │
@@ -186,6 +187,7 @@ Kali	192.168.56.106
 ## 7. Network Flow Diagram
 
 Windows Management Host
+
                      │
                      │
        VirtualBox Host-Only Adapter
@@ -202,6 +204,7 @@ Windows Management Host
         │
         │
   Security Monitoring
+  
 
 ## 8. Lessons Learned
 
