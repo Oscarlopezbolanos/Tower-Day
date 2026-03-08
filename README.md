@@ -38,9 +38,8 @@ Windows Host
                   192.168.56.1
                          │
        ┌─────────────────┼─────────────────┐
-       │                 │                 │
-   Wazuh SIEM        Nextcloud VM        Kali Linux
-   192.168.56.104    192.168.56.105      192.168.56.106
+    Wazuh SIEM        Nextcloud VM        Kali Linux
+    192.168.56.104    192.168.56.105      192.168.56.106
 
 ## 3. Infrastructure Components
 
@@ -200,11 +199,11 @@ Windows Management Host
         ┌────────────┼─────────────┐
         │            │             │
      Wazuh        Nextcloud       Kali
-  192.168.56.104 192.168.56.105 192.168.56.106
+    192.168.56.104 192.168.56.105 192.168.56.106
   
         │
         │
-  Security Monitoring
+    Security Monitoring
   
 
 ## 8. Lessons Learned
