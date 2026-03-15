@@ -1,0 +1,5 @@
+Wazuh Agent Connectivity Issue
+
+The Kali Wazuh agent was disconnected because its ossec.conf file still
+referenced the old manager IP (192.168.56.10) after the lab network was reconfigured.
+Updating the manager address to 192.168.56.107 and restarting the wazuh-agent service restored connectivity.
