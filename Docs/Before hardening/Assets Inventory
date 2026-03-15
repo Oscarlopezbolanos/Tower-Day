@@ -1,33 +1,81 @@
-#Assets Inventory
+Lab Environment Overview
 
-## Nextcloud
+This lab environment simulates a small-business private cloud infrastructure with monitoring and attack simulation capabilities. The following virtual machines are deployed within the 192.168.56.0/24 network managed by pfSense.
 
-Vm - Cloud Clone
-Role - Private Cloud
-IP - 192.168.56.108/24
-os - Ubuntu (64 bit)
-MEMORY/CPU - 4000 MB/2
+Virtual Machine Inventory
+Nextcloud Server
+Attribute	Value
+VM Name	Cloud Clone
+Role	Private Cloud Storage Server
+IP Address	192.168.56.108/24
+Operating System	Ubuntu Server (64-bit)
+Memory	4000 MB
+CPU	2 vCPUs
 
-## Kali
+This server hosts the Nextcloud private cloud platform, which represents the small-business service being protected and monitored.
 
-Vm - Kali
-Role - Treath actor
-IP - 192.168.56.106/24
-OS - Ubutu (64-bit)
-MEMORY/CPU - 3000 MB/2
+Kali Linux
+Attribute	Value
+VM Name	Kali
+Role	Threat Actor / Attack Simulation
+IP Address	192.168.56.106/24
+Operating System	Kali Linux (Ubuntu-based)
+Memory	3000 MB
+CPU	2 vCPUs
 
-## Wazuh Enviroment
+Kali Linux is used to simulate attacker behavior such as:
 
-Vm - Ubuntu server 1
-Role - EndPoint Detention and Response (EDR)
-IP - 192.168.56.107/24
-OS - Ubutu (64-bit)
-MEMORY/CPU - 8000 MB/4
+reconnaissance scanning
 
-## pfsense
+service enumeration
 
-Vm - pfsense
-Role - EndPoint Detention and Response (EDR)
-IP - 192.168.56.107/24
-OS - pfsense
-MEMORY/CPU - 2040 MB/2
+vulnerability probing
+
+These activities generate security telemetry captured by Wazuh.
+
+Wazuh SIEM Environment
+Attribute	Value
+VM Name	Ubuntu Server 1
+Role	Security Information and Event Management (SIEM)
+IP Address	192.168.56.107/24
+Operating System	Ubuntu Server (64-bit)
+Memory	8000 MB
+CPU	4 vCPUs
+
+The Wazuh platform provides:
+
+centralized log monitoring
+
+security event detection
+
+attack telemetry collection
+
+This system is used to observe attacker activity during the baseline and hardened phases of the project.
+
+pfSense Firewall
+Attribute	Value
+VM Name	pfSense
+Role	Firewall / Router / DHCP Server
+IP Address	192.168.56.1
+Operating System	pfSense
+Memory	2040 MB
+CPU	2 vCPUs
+
+pfSense provides:
+
+network routing
+
+DHCP services
+
+firewall policy enforcement
+
+network segmentation
+
+This device forms the security boundary for the lab environment.
+
+Network Summary
+Network	Description
+192.168.56.0/24	VirtualBox Host-Only Lab Network
+Gateway	pfSense (192.168.56.1)
+DHCP	pfSense DHCP Server
+O
