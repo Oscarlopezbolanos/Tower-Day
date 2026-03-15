@@ -1,9 +1,11 @@
-Lab Environment Overview
+## Lab Environment Overview
 
 This lab environment simulates a small-business private cloud infrastructure with monitoring and attack simulation capabilities. The following virtual machines are deployed within the 192.168.56.0/24 network managed by pfSense.
 
-Virtual Machine Inventory
-Nextcloud Server
+# Virtual Machine Inventory
+
+# Nextcloud Server
+
 Attribute	Value
 VM Name	Cloud Clone
 Role	Private Cloud Storage Server
@@ -14,7 +16,8 @@ CPU	2 vCPUs
 
 This server hosts the Nextcloud private cloud platform, which represents the small-business service being protected and monitored.
 
-Kali Linux
+# Kali Linux 
+
 Attribute	Value
 VM Name	Kali
 Role	Threat Actor / Attack Simulation
@@ -33,7 +36,8 @@ vulnerability probing
 
 These activities generate security telemetry captured by Wazuh.
 
-Wazuh SIEM Environment
+# Wazuh SIEM Environment
+
 Attribute	Value
 VM Name	Ubuntu Server 1
 Role	Security Information and Event Management (SIEM)
@@ -52,7 +56,8 @@ attack telemetry collection
 
 This system is used to observe attacker activity during the baseline and hardened phases of the project.
 
-pfSense Firewall
+# pfSense Firewall
+
 Attribute	Value
 VM Name	pfSense
 Role	Firewall / Router / DHCP Server
