@@ -1,0 +1,34 @@
+#Assets Inventory
+
+## Nextcloud
+
+Vm - Cloud Clone
+Role - Private Cloud
+IP - 192.168.56.108/24
+os - Ubuntu (64 bit)
+MEMORY/CPU - 4000 MB/2
+
+## Kali
+
+Vm - Kali
+Role - Treath actor
+IP - 192.168.56.106/24
+OS - Ubutu (64-bit)
+MEMORY/CPU - 3000 MB/2
+
+## Wazuh Enviroment
+
+Vm - Ubuntu server 1
+Role - EndPoint Detention and Response (EDR)
+IP - 192.168.56.107/24
+OS - Ubutu (64-bit)
+MEMORY/CPU - 8000 MB/4
+
+## pfsense
+
+Vm - pfsense
+Role - EndPoint Detention and Response (EDR)
+IP - 192.168.56.107/24
+OS - pfsense
+MEMORY/CPU - 2040 MB/2
+
