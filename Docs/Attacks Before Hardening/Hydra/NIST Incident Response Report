@@ -6,7 +6,7 @@ A simulated SSH brute force attack was conducted from a Kali Linux attacker mach
 
 ---
 
-🧱 Environment
+Environment
 
 Role| System| IP Address
 SIEM| Wazuh Manager| 192.168.56.104
