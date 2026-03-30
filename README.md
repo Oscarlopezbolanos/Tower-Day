@@ -39,7 +39,7 @@ Windows Host
                          │
        ┌─────────────────┼─────────────────┐─────────────────┐
     Wazuh SIEM        Nextcloud VM      Kali Linux          windows 10
-    192.168.56.104    192.168.56.105    192.168.56.106     192.168.56.20
+    192.168.56.104    192.168.56.108    192.168.56.106     192.168.56.20
 
 ## 3. Infrastructure Components
 
@@ -172,7 +172,7 @@ Machines successfully obtained DHCP addresses from pfSense.
 Example:
 
 Wazuh     192.168.56.104
-Nextcloud 192.168.56.105
+Nextcloud 192.168.56.108
 Kali      192.168.56.106
 
 ## 6. Final Working Environment
@@ -180,8 +180,9 @@ Kali      192.168.56.106
 Machine	IP
 pfSense	192.168.56.1
 Wazuh	192.168.56.104
-Nextcloud	192.168.56.105
+Nextcloud	192.168.56.108
 Kali	192.168.56.106
+Windows 10 192.168.56.120
 
 ## 7. Network Flow Diagram
 
@@ -196,10 +197,10 @@ Windows Management Host
                 pfSense
               192.168.56.1
                      │
-        ┌────────────┼─────────────┐
-        │            │             │
-     Wazuh        Nextcloud       Kali
-    192.168.56.104-192.168.56.105-192.168.56.106
+        ┌─────────────────┼──────────────────┼─────────────┐
+        │                 │                  │             | 
+     Wazuh            Nextcloud             Kali        Windows 10
+    192.168.56.104   192.168.56.108    192.168.56.106  192.168.56.120
   
         │
         │
