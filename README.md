@@ -1,252 +1,174 @@
-# Tower-Day
-Design and Security Hardening of a Hybrid Private Cloud Architecture for Small Business Environments. This project designs and hardens a hybrid “private cloud” environment that delivers secure file sharing and administrative remote desktop while remaining feasible for small IT teams.
+# Columbus State University Tower-Day 
+>Design and Security Hardening of a Hybrid Private Cloud Architecture for Small Business Environments. This project designs and hardens a **hybrid “private cloud”** environment that delivers secure file sharing and **administrative remote desktop** while remaining feasible for small IT teams.  
+*Authors: Oscar Lopez-Bolanos / Patrick Cassibry,*
+>Cybersecurity Nexus Program
 ## Tower Day Lab Build Documentation
-pfSense Network + Wazuh + Nextcloud + Kali Lab
-Author Oscar Lopez-Bolanos
-Columbus State University 
---
-## Cybersecurity Nexus Program
+### **pfSense Network + Wazuh + Nextcloud + Kali Lab**
 
-## 1. Objectives
 
-The objective of this lab is to build a segmented private cloud security environment using a firewall and SIEM monitoring to demonstrate enterprise security architecture for small business infrastructure.
+---
 
-The environment includes:
 
-pfSense firewall and DHCP server
+## 1. Environment
 
-Wazuh SIEM monitoring platform
+This environment includes:
+* **pfSense:** Firewall and DHCP server
+* **Wazuh:** SIEM monitoring platform
+* **Nextcloud:** Secure private cloud storage and file sharing
+* **Kali Linux:** Attacker machine
+* **Windows 11 host:** Type 2 Hypervisor host system
+* **Tailscale:** Zero-Trust VPN for secure remote management
+* **RustDesk:** Self-hosted ID/Relay server for secure GUI based remote desktop
 
-Nextcloud server (private cloud storage)
+The lab network is isolated using **VirtualBox Host-Only** networking and managed through pfSense firewall rules and **DHCP services**.
 
-Kali Linux attacker machine
+## 2. Technology Stack
 
-Windows 11 host management system
+| Category | Tool | Role in Architecture |
+| :--- | :--- | :--- |
+| **Networking** | **pfSense** | Perimeter firewall and internal DHCP management. |
+| **Connectivity** | **Tailscale** | Zero-Trust overlay network for secure administration. |
+| **SIEM / SOC** | **Wazuh** | Real-time threat detection and security monitoring. |
+| **Cloud Storage** | **Nextcloud** | Hardened private cloud for file synchronization. |
+| **Analysis** | **Kali Linux** | Offensive security testing and vulnerability validation. |
+| **Guest OS** | **Ubuntu Server** | Primary host for all containerized and standalone services. |
+| **Hypervisor** | **Windows 11 (Host)** | Type 2 Hypervisor platform supporting the virtualized infrastructure. |
+| **Remote Access** | **RustDesk** | Self-hosted ID/Relay server for secure GUI-based remote desktop. |
 
-The lab network is isolated using VirtualBox Host-Only networking and managed through pfSense firewall rules and DHCP services.
+## 3. Objectives
 
-## 2. Lab Architecture
+[x] Architecture Design: Develop a functional hybrid "private cloud" bridging local and remote assets.
 
-Windows Host
+[x] Network Hardening: Implement a Zero-Trust networking model using Tailscale for secure administrative access.
 
-                  (Management PC)
-                         │
-                         │
-        VirtualBox Host-Only Network (192.168.56.0/24)
-                         │
-                     pfSense
-                  192.168.56.1
-                         │
-       ┌─────────────────┼─────────────────┐─────────────────┐
-    Wazuh SIEM        Nextcloud VM      Kali Linux          windows 10
-    192.168.56.104    192.168.56.108    192.168.56.106     192.168.56.20
+[x] Infrastructure Deployment: Configure an Ubuntu-based server environment for hosted services like Nextcloud.
 
-## 3. Infrastructure Components
+[x] Active Security Monitoring: Integrate Wazuh SOC for real-time threat detection and log analysis.
 
-Role
-pfSense	Firewall, DHCP server
-Wazuh	Security monitoring / SIEM
-Nextcloud	Private cloud storage
-Kali Linux	Attacker simulation
-Windows Host	Management interface
+[ ] System Resilience: Hardening of the pfSense perimeter and internal virtual machines against common attack vectors.
 
-## 4. Network Configuration
+[ ] Documentation & Scalability: Provide a clear blueprint for small IT teams to replicate this high-security, low-cost architecture.
 
-Network
-192.168.56.0/24
-pfSense
-LAN IP: 192.168.56.1
-DHCP Range: 192.168.56.100 – 192.168.56.200
-DNS Server: 192.168.56.1
+## 4. Lab Architecture
 
-## 5. Major Problems Encountered
+The architecture utilizes a **Zero-Trust Network Access (ZTNA)** model. **Tailscale** provides the secure transport layer, while **RustDesk** and **Wazuh** provide the administrative and monitoring interfaces.
 
-During the deployment several configuration issues prevented communication between systems.
+```text
+ [ Remote Admin ] 
+        |
+        | (1) Authenticated WireGuard Tunnel (Tailscale)
+        v
+ [ Management PC ] <--- (2) Graphical Remote Desktop (RustDesk)
+        |
+        +--- VirtualBox Host-Only Network (192.168.56.0/24)
+        |           |
+        |    pfSense Gateway (192.168.56.1)
+        |           |
+        +-----------+-----------------------+----------------------+-------------------+
+        |                                   |                      |                   |
+    Wazuh SIEM                         Nextcloud VM            Kali Linux       RustDesk Server
+  (192.168.56.104)                   (192.168.56.105)        (192.168.56.106)    (IP MISSING)
 
-Problem 1 — Windows Host Could Not Reach pfSense
-Symptom
+The internal lab is logically isolated. External management is only possible through the authenticated Tailscale overlay, preventing any exposure to the public internet.
+```
+## 5. Network Configuration
 
-Attempting to access pfSense WebGUI:
+The internal lab network is managed by **pfSense** to ensure consistent IP addressing and DNS resolution for the virtualized services.
 
-https://192.168.56.1
+* **Internal Network:** `192.168.56.0/24`
+* **pfSense LAN IP:** `192.168.56.1`
+* **DHCP Range:** `192.168.56.100` – `192.168.56.200`
+* **DNS Server:** `192.168.56.1`
 
-Resulted in:
+## 6. Major Problems Encountered & Troubleshooting
 
-ERR_CONNECTION_REFUSED
-Root Cause
+During deployment, several configuration issues were identified and resolved to ensure cross-system communication.
 
-Windows was not properly configured to communicate with the VirtualBox Host-Only network.
+### **Problem 1: Host-to-pfSense Connectivity**
+* **Symptom:** Windows Host could not reach the pfSense WebGUI at `https://192.168.56.1` (Error: `ERR_CONNECTION_REFUSED`).
+* **Root Cause:** The VirtualBox Host-Only Adapter lacked a valid IPv4 configuration to communicate on the `192.168.56.x` subnet.
+* **Solution:** 1. Manually configured the **VirtualBox Host-Only Ethernet Adapter** in Windows Network Settings.
+    2. Set Static IP: `192.168.56.5` | Subnet: `255.255.255.0` | Gateway: `None`.
 
-The VirtualBox Host-Only Adapter existed but did not have a valid IPv4 configuration.
+---
 
-Solution
+### **Problem 2: Ubuntu Server DHCP Negotiation**
+* **Symptom:** Ubuntu VMs were not requesting DHCP leases from pfSense, remaining stuck on static IPs or no connectivity.
+* **Important Discovery:** Ubuntu Server 24.04 utilizes **Netplan** for network management; legacy commands like `dhclient` are not installed by default.
+* **Root Cause:** The default Netplan configuration was hardcoded for a static interface rather than DHCP.
+* **Solution:** 1. Edited the Netplan YAML file: 
+       ```bash
+       sudo nano /etc/netplan/50-cloud-init.yaml
+       ```
+    2. Updated configuration from static to `dhcp4: true`.
+    3. Applied changes:
+       ```bash
+       sudo netplan apply
+       ```
+* **Result:** All machines successfully obtained leases:
+    * **Wazuh:** `192.168.56.104`
+    * **Nextcloud:** `192.168.56.105`
+    * **Kali:** `192.168.56.106`
 
-Navigate to:
 
-Control Panel
-Network and Sharing Center
-Change Adapter Settings
+## 7. Final Working Environment
 
-Open:
 
-VirtualBox Host-Only Ethernet Adapter
-
-Configure IPv4 manually:
-
-IP Address: 192.168.56.5
-Subnet Mask: 255.255.255.0
-Gateway: (blank)
-
-This allowed the Windows host to communicate with the pfSense LAN network.
-
-Problem 2 — Ubuntu Servers Not Receiving DHCP
-Symptom
-
-Running:
-
-ip a
-
-showed static IP configuration:
-
-192.168.56.10/24
-
-Even after enabling DHCP on pfSense, the servers did not request new addresses.
-
-Root Cause
-
-Ubuntu Server was configured with a static network configuration using Netplan.
-
-Example configuration:
-
-dhcp4: no
-addresses:
- - 192.168.56.10/24
-
-This prevented the machine from requesting DHCP leases.
-
-Important Discovery
-
-Attempting to run:
-
-dhclient
-
-resulted in:
-
-command not found
-
-This revealed that Ubuntu Server 24.04 uses Netplan, not dhclient directly.
-
-Solution — Netplan Configuration
-
-Edit configuration file:
-
-sudo nano /etc/netplan/50-cloud-init.yaml
-
-Original configuration:
-
-network:
- version: 2
- renderer: networkd
- ethernets:
-  enp0s3:
-   dhcp4: no
-   addresses:
-    - 192.168.56.10/24
-   nameservers:
-    addresses: [8.8.8.8]
-Updated configuration
-network:
- version: 2
- renderer: networkd
- ethernets:
-  enp0s3:
-   dhcp4: true
-
-Apply configuration:
-
-sudo netplan apply
-Result
-
-Machines successfully obtained DHCP addresses from pfSense.
-
-Example:
-
-Wazuh     192.168.56.104
-Nextcloud 192.168.56.108
-Kali      192.168.56.106
-
-## 6. Final Working Environment
 
 Machine	IP
 pfSense	192.168.56.1
 Wazuh	192.168.56.104
-Nextcloud	192.168.56.108
+Nextcloud	192.168.56.105
 Kali	192.168.56.106
-Windows 10 192.168.56.120
 
-## 7. Network Flow Diagram
+## 8. Network Flow Diagram
 
 Windows Management Host
 
-                     │
-                     │
-       VirtualBox Host-Only Adapter
-              192.168.56.5
-                     │
-                     │
-                pfSense
-              192.168.56.1
-                     │
-        ┌─────────────────┼──────────────────┼─────────────┐
-        │                 │                  │             | 
-     Wazuh            Nextcloud             Kali        Windows 10
-    192.168.56.104   192.168.56.108    192.168.56.106  192.168.56.120
-  
-        │
-        │
-    Security Monitoring
-  
+```
+    [ Windows Management Host ]
+                  |
+       [ Host-Only Adapter: .5 ]
+                  |
+            [ pfSense: .1 ]
+                  |
+      +-----------+-----------+
+      |           |           |
+  [ Wazuh ]  [ Nextcloud ] [ Kali ]
+    (.104)      (.105)      (.106)
+      ^           |           |
+      |           |           |
+      +-----------+-----------+
+             (Traffic Flow)
+                  |
+        [ Security Monitoring ]
+```
 
-## 8. Lessons Learned
+## 9. Lessons Learned
 
-1. Host Networking Must Be Verified First
+> **1. Host Networking Verification:** Virtual machine configuration is irrelevant if the host-only adapter is misconfigured. Always verify the host's physical and virtual bridge status first.
+>
+> **2. Modern Linux Networking:** Ubuntu 24.04 relies exclusively on **Netplan**. Traditional tools like `dhclient` are deprecated; mastery of YAML-based network configuration is essential.
+>
+> **3. DHCP vs. Static Conflict:** DHCP will not override an existing static configuration in Netplan. A "Clean Slate" approach in the YAML file is required for successful lease negotiation.
+## 10. Next Steps
 
-Even if virtual machines are correctly configured, the host must have access to the host-only network.
+- [ ] **Firewall Segmentation:** Implement granular pfSense rules to isolate the Kali "Attacker" from the "Production" Nextcloud server.
+- [ ] **Attack Simulations:** Execute controlled brute-force and SQL injection tests from Kali Linux.
+- [ ] **Wazuh Log Analysis:** Build custom rulesets in Wazuh to detect and alert on the simulated attacks.
+- [ ] **Hardening Comparison:** Document the "Security Posture" before and after hardening configurations are applied.
+## 11. Conclusion & Troubleshooting Timeline
 
-2. Ubuntu Server Uses Netplan
+This lab demonstrates a secure, segmented infrastructure monitored by **Wazuh SIEM**. By resolving real-world networking hurdles, the environment is now a stable platform for cybersecurity research.
 
-Modern Ubuntu servers do not rely on traditional network tools like dhclient.
+### **Troubleshooting Timeline**
 
-Network configuration is handled through Netplan YAML files.
+1. **Connectivity Failure:** pfSense web interface unreachable.
+2. **Investigation:** Audited host network adapter settings.
+3. **Host Fix:** Manually assigned IPv4 to VirtualBox host-only adapter.
+4. **DHCP Issue:** Ubuntu servers failed to pull IPs despite pfSense being active.
+5. **Netplan Discovery:** Identified static YAML blocks overriding DHCP requests.
+6. **YAML Correction:** Modified `/etc/netplan/` to enable `dhcp4: true`.
+7. **Resolution:** All systems confirmed operational with consistent connectivity.
 
-3. DHCP Will Not Override Static Configuration
 
-If a static IP exists in Netplan, DHCP will not function until the configuration is changed.
-
-## 9. Next Steps
-
-Future work will include:
-
-Firewall segmentation rules in pfSense
-
-Attack simulations from Kali Linux
-
-Log analysis using Wazuh SIEM
-
-Detection comparison before and after firewall hardening
-
-## 10. Conclusion
-
-This lab demonstrates the deployment of a segmented virtual infrastructure secured with pfSense and monitored using Wazuh SIEM. Through troubleshooting networking and configuration issues, the environment now provides a stable platform for cybersecurity attack simulation and detection research.
-
-## Troubleshooting Timeline
-
-1. pfSense web interface unreachable
-2. Investigated host network adapter
-3. Fixed VirtualBox host-only IPv4 configuration
-4. Enabled pfSense DHCP
-5. Ubuntu static IP prevented DHCP
-6. Identified Netplan configuration
-7. Modified YAML to enable DHCP
-8. Applied configuration
-9. Network successfully operational
