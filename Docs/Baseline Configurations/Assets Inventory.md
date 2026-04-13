@@ -16,7 +16,7 @@
 | **Wazuh-Mgr** | SIEM / SOC | Threat detection & alerting. | 2 vCPU / 4GB | Ubuntu 24.04 | Open Source |
 | **Nextcloud-Srv** | Cloud Storage | Secure data sovereignty. | 1 vCPU / 2GB | Ubuntu 24.04 | Open Source |
 | **Kali-Attacker** | Offensive Suite | Security validation testing. | 2 vCPU / 2GB | Kali Linux | Open Source |
-| **RustDesk-Relay** | ID/Relay Server | Encrypted remote access. | 1 vCPU / 1GB | Ubuntu 24.04 | Open Source |
+| **RustDesk-Relay** | ID/Relay Server | Remote Access Infrastructure | 1 vCPU / 1GB | Ubuntu 24.04 | Open Source |
 
 ## 3. Deployment Specifications
 * **Hypervisor:** Oracle VirtualBox (Type 2) - **Open Source**
