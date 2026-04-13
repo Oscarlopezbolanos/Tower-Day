@@ -1,86 +1,52 @@
-## Lab Environment Overview
+# Asset Inventory: Baseline Environment
+**Project:** Hybrid Private Cloud Architecture  
+**Architects:** Oscar Lopez-Bolanos & Patrick Cassibry  
+**Classification:** Internal Baseline Documentation
 
-This lab environment simulates a small-business private cloud infrastructure with monitoring and attack simulation capabilities. The following virtual machines are deployed within the 192.168.56.0/24 network managed by pfSense.
+---
 
-# Virtual Machine Inventory
+## 1. Project Overview
+> **Functional Role:** This project acts as a secure "office in a box." Before applying security locks (Hardening), we must catalog every virtual device in our environment to ensure 100% visibility.
 
-# Nextcloud Server
+## 2. Infrastructure Inventory
 
-Attribute	Value
-VM Name	Cloud Clone
-Role	Private Cloud Storage Server
-IP Address	192.168.56.108/24
-Operating System	Ubuntu Server (64-bit)
-Memory	4000 MB
-CPU	2 vCPUs
+| Hostname | Technical Role | Functional Purpose | CPU/RAM | Platform | License |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **pfSense-GW** | Network Gateway | Perimeter defense & routing. | 1 vCPU / 1GB | FreeBSD | Open Source |
+| **Wazuh-Mgr** | SIEM / SOC | Threat detection & alerting. | 2 vCPU / 4GB | Ubuntu 24.04 | Open Source |
+| **Nextcloud-Srv** | Cloud Storage | Secure data sovereignty. | 1 vCPU / 2GB | Ubuntu 24.04 | Open Source |
+| **Kali-Attacker** | Offensive Suite | Security validation testing. | 2 vCPU / 2GB | Kali Linux | Open Source |
+| **RustDesk-Relay** | ID/Relay Server | Encrypted remote access. | 1 vCPU / 1GB | Ubuntu 24.04 | Open Source |
 
-This server hosts the Nextcloud private cloud platform, which represents the small-business service being protected and monitored.
+## 3. Deployment Specifications
+* **Hypervisor:** Oracle VirtualBox (Type 2) - **Open Source**
+* **Network Topology:** Isolated Host-Only Adapter (`192.168.56.0/24`)
+* **Hardware Foundation:** Windows 11 Physical Host
 
-# Kali Linux 
+> **Strategic:** We are using "computers inside of a computer." This allows us to simulate a full corporate data center on a single laptop or desktop, ensuring the entire environment is isolated from the real-world internet for safety.
 
-Attribute	Value
-VM Name	Kali
-Role	Threat Actor / Attack Simulation
-IP Address	192.168.56.106/24
-Operating System	Kali Linux (Ubuntu-based)
-Memory	3000 MB
-CPU	2 vCPUs
+## 4. Baseline Security Configuration
+Before hardening, the following "weak" states exist for testing purposes:
+* **Authentication:** Password-based login is active (rather than secure keys).
+* **Network Traffic:** Internal "East-West" traffic is unmonitored.
+* **Public Exposure:** Management ports are accessible within the local subnet.
 
-Kali Linux is used to simulate attacker behavior such as:
+---
 
-reconnaissance scanning
 
-service enumeration
 
-vulnerability probing
 
-These activities generate security telemetry captured by Wazuh.
 
-# Wazuh SIEM Environment
 
-Attribute	Value
-VM Name	Ubuntu Server 1
-Role	Security Information and Event Management (SIEM)
-IP Address	192.168.56.107/24
-Operating System	Ubuntu Server (64-bit)
-Memory	8000 MB
-CPU	4 vCPUs
 
-The Wazuh platform provides:
 
-centralized log monitoring
 
-security event detection
 
-attack telemetry collection
 
-This system is used to observe attacker activity during the baseline and hardened phases of the project.
 
-# pfSense Firewall
 
-Attribute	Value
-VM Name	pfSense
-Role	Firewall / Router / DHCP Server
-IP Address	192.168.56.1
-Operating System	pfSense
-Memory	2040 MB
-CPU	2 vCPUs
 
-pfSense provides:
 
-network routing
 
-DHCP services
 
-firewall policy enforcement
 
-network segmentation
-
-This device forms the security boundary for the lab environment.
-
-Network Summary
-Network	Description
-192.168.56.0/24	VirtualBox Host-Only Lab Network
-Gateway	pfSense (192.168.56.1)
-DHCP	pfSense DHCP Server
-O
