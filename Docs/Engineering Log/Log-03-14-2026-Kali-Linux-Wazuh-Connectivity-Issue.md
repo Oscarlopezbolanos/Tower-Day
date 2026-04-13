@@ -6,7 +6,7 @@
 
 ## 1. Technical Challenge
 * **Kali:** Linux was seen as disconnected in the Wazuh Dashboard
-* **Cause:** was the ossec.conf file referenced old manager IP
+* **Cause:** the ossec.conf file referenced old manager IP
 
 ## 2. Resolution Steps
 * **Configuration Update:** Manually edited the `/var/ossec/etc/ossec.conf` file on the Kali Linux VM
