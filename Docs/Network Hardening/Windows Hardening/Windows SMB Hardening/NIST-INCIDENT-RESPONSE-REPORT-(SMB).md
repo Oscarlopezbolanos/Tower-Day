@@ -31,10 +31,17 @@
 * **Recovery:** Restored network connectivity and verified that file sharing only functioned over encrypted channels.
 
 ## Phase 4: Post-Incident Activity (Lessons Learned)
-> **Functional Purpose:** This is the "Debrief." We look back at the incident to see how to prevent it in the future. In the "Bare Metal" world, this is where we document the hardening steps for the next server build.
+> **Functional Purpose:** This is the "Debrief." We analyze the incident to understand the real-world business risks and ensure the vulnerability is permanently neutralized.
 
-* **Observation:** The default Windows configuration is "Open by Default" for ease of use, which is a security liability.
-* **Hardening Rule:** SMB should always be disabled or strictly firewalled unless specifically required for a business function.
-* **Final Status:** System hardened; vulnerability eliminated.
+### **The Real-World Cost of Inaction**
+Had the Hydra brute-force simulation transitioned into a live exploit in a production environment, the "Cloud Lab" would have faced the following impacts:
 
----
+* **Ransomware Propagation (The WannaCry Scenario):** Legacy SMBv1 is a primary carrier for "wormable" malware. A single compromised node could have led to a total encryption of the Nextcloud data stores and local backups.
+* **Data Exfiltration & Compliance Breach:** Because the legacy SMB connection was unencrypted, an attacker could have intercepted sensitive PII (Personally Identifiable Information) moving across the wire, leading to legal liabilities and loss of trust.
+* **Lateral Movement:** The credentials harvested in our simulation would have allowed an attacker to move from the Windows workstation to the **pfSense** management gateway, resulting in a full network takeover.
+
+### **Final Hardening Verification**
+To ensure these risks are neutralized, we implemented the **SMB Hardening Standard**.
+* **Result:** System hardened; SMBv1 disabled; Packet signing enforced. 
+* **Final Status:** Verification scans from the Security Testing node now confirm the vulnerability is fully remediated.
+
