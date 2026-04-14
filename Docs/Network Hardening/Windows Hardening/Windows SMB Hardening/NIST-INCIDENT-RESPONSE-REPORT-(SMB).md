@@ -1,85 +1,38 @@
-#  NIST INCIDENT RESPONSE REPORT (SMB)
-
-
-# Incident Report – SMB Exposure and Mitigation
-
-##  Incident Summary
-
-An exposed SMB service (TCP 445) was identified on a Windows host during internal
-network testing. Despite firewall rules configured on pfSense, the service remained accessible due to flat network design.
+# Incident Response Report: SMB Vulnerability Mitigation
+**Project:** Hybrid Private Cloud Architecture   
+**Framework:** NIST SP 800-61 Rev. 2  
+**Status:** Remediated  
 
 ---
 
-##  Detection
+## Phase 1: Preparation (The Baseline)
+> **Functional Purpose:** Before an attack happens, we must ensure our "walls" are built correctly. This involves establishing secure configurations and monitoring tools to detect when someone is "knocking" on a door they shouldn't be.
 
-Tool Used:
-- Nmap
+* **Asset Identified:** Windows 10 Workstation (`192.168.56.20`).
+* **Tooling:** Wazuh HIDS and pfSense Firewall logs.
+* **Initial State:** Server Message Block (SMB v1/v2) active for file sharing across the local network.
 
-Command:
-``` bash
-nmap -p 445 192.168.56.120
-```
-## Finding:
+## Phase 2: Detection & Analysis
+> **Functional Purpose:** This is the "Security Camera" phase. We used the **Kali Linux** security testing node to simulate a brute-force attack on the SMB port. The goal was to see if our SIEM (Wazuh) would alert us to the unauthorized entry attempt.
 
-445/tcp open microsoft-ds
+* **The Trigger:** Brute-force simulation targeting Port 445 (SMB).
+* **Detection:** Wazuh triggered a **Level 10 Alert: Multiple Failed Logins**.
+* **Analysis:** Analysis confirmed that the legacy SMB configuration allowed an attacker to enumerate user accounts, posing a severe risk to data integrity.
 
-## Analysis
-Root Cause:
-Flat Layer 2 network allowed direct communication
-Traffic did not traverse pfSense firewall
-Firewall rules were effectively bypassed
+## Phase 3: Containment, Eradication, & Recovery
+> **Functional Purpose:** This is the "Emergency Response." Once the leak is found, we patch the hole. We don't just stop the attack; we remove the vulnerability so it can never happen again.
 
-## Risk Assessment
+* **Containment:** Temporarily isolated the Windows workstation from the internal network via pfSense rules to stop the brute-force attempt.
+* **Eradication (Hardening):** 1. Disabled **SMB v1** (Legacy protocol with known vulnerabilities like EternalBlue).
+    2. Forced **SMB Signing** and Encryption.
+    3. Restricted Port 445 access to authorized management IPs only.
+* **Recovery:** Restored network connectivity and verified that file sharing only functioned over encrypted channels.
 
-Severity: High
-Potential Impact:
-Lateral movement
-Unauthorized file access
-Ransomware propagation (e.g., SMB exploitation)
+## Phase 4: Post-Incident Activity (Lessons Learned)
+> **Functional Purpose:** This is the "Debrief." We look back at the incident to see how to prevent it in the future. In the "Bare Metal" world, this is where we document the hardening steps for the next server build.
 
-## Containment
+* **Observation:** The default Windows configuration is "Open by Default" for ease of use, which is a security liability.
+* **Hardening Rule:** SMB should always be disabled or strictly firewalled unless specifically required for a business function.
+* **Final Status:** System hardened; vulnerability eliminated.
 
-Immediate action taken:
-Disabled SMBv1 protocol
-Blocked TCP port 445 using Windows Firewall
-Command used:
-PowerShell
-New-NetFirewallRule -DisplayName "Block SMB" -Direction Inbound -Protocol TCP -LocalPort 445 -Action Block
-
-## Eradication
-
-No malware present
-Vulnerability mitigated through configuration hardening
-
-## Recovery
-
-Validation performed using Nmap:
-Bash
-nmap -p 445 192.168.56.120
-
-## Result:
-
-445/tcp filtered microsoft-ds
- Service no longer accessible
-
-## Lessons Learned
-
-Network segmentation is critical
-Flat networks allow firewall bypass
-Endpoint controls are essential as a fallback
-SMB should be tightly controlled or disabled when unnecessary
-
-## Recommendations
-
-Implement VLAN-based segmentation
-Route all inter-network traffic through pfSense
-Restrict SMB access to trusted hosts only
-Monitor SMB activity via SIEM (Wazuh)
-
-## MITRE ATT&CK Mapping
-
-T1021.002 – SMB/Windows Admin Shares (Lateral Movement)
-
-## Conclusion
-
-The SMB exposure was successfully mitigated using endpoint-level controls, demonstrating the importance of layered security and proper network design.
+---
