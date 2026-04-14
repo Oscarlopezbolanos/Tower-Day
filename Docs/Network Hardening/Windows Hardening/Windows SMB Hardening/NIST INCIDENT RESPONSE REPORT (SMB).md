@@ -1,6 +1,6 @@
 #  NIST INCIDENT RESPONSE REPORT (SMB)
 
-```markdown
+
 # Incident Report – SMB Exposure and Mitigation
 
 ##  Incident Summary
@@ -16,9 +16,9 @@ Tool Used:
 - Nmap
 
 Command:
-```bash
+``` bash
 nmap -p 445 192.168.56.120
-
+```
 ## Finding:
 
 445/tcp open microsoft-ds
