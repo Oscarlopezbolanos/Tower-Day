@@ -54,7 +54,7 @@ Firewall rules were created under:
 nmap -p 22 192.168.56.120
 nmap -p 445 192.168.56.120
 nmap -p 3389 192.168.56.120
-
+```
 ## Results
 Port  Service  State
 22    SSH      Filtered
