@@ -20,7 +20,7 @@ The core philosophy of this hardening phase is **Implicit Deny**. We configured 
 ## 3. Configuration Evidence (GUI Validation)
 > **Functional Purpose:** Verification of the "Control Plane" ensures the rules are active in the software before we test them in the field.
 
-![Screenshot: pfSense Rule Configuration](./Screenshoots/pfSense-RDP-rule.png)
+![Screenshot: pfSense Rule Configuration](./Screenshoots/pfSense-RDP-Block-Rule.png)
 * **Rule Analysis:** This screenshot confirms the "Block" action is applied correctly to the LAN interface, placed above the allow rules to ensure immediate packet dropping.
 
 ---
