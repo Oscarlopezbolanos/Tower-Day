@@ -1,105 +1,47 @@
-# pfSense Network Hardening Attempt (Phase 1)
-
-## 📌 Objective
-Implement firewall rules using pfSense to prevent lateral movement within a flat network environment.
-
----
-
-##  Background
-
-The lab environment initially consisted of a flat network where all systems were connected within the same subnet:
-
-- Network: 192.168.56.0/24
-- pfSense LAN IP: 192.168.56.1
-
-### Systems:
-| System | IP Address | Role |
-|--------------|----------------|------|
-| pfSense | 192.168.56.1 | Firewall / Router |
-| Wazuh SIEM | 192.168.56.104 | Monitoring |
-| Nextcloud VM | 192.168.56.105 | Private Cloud |
-| Kali Linux | 192.168.56.106 | Attacker |
-| Windows 10 | 192.168.56.120 | Target |
+# Technical Standard: pfSense Network Hardening & Traffic Control
+**Project:** Hybrid Private Cloud Architecture  
+**Gateway IP:** `192.168.56.1`
 
 ---
 
-##  Firewall Rules Implemented
+## 1. Strategic Overview
+> **Functional Purpose:** In a "Bare Metal" environment, the firewall is the primary line of defense. pfSense acts as the "Security Guard" for the lab. This document outlines the implementation of firewall rules to prevent lateral movement and the critical "Phase 1" finding regarding network routing pathing.
 
-Firewall rules were created under:
+## 2. Firewall Architecture: The "Default Deny" Stance
+The core philosophy of this hardening phase is **Implicit Deny**. We configured specific Block rules above the default "Allow" rule to cloak vulnerable services.
 
-`Firewall → Rules → LAN`
+### **Implemented Security Rules (LAN Interface):**
+| Rule | Protocol | Port | Functional Threat Mitigation |
+| :--- | :--- | :--- | :--- |
+| **SSH Block** | TCP | 22 | Prevents unauthorized remote terminal access. |
+| **SMB Block** | TCP | 445 | Neutralizes ransomware propagation and "wormable" exploits. |
+| **RDP Block** | TCP | 3389 | Closes the most common vector for credential harvesting. |
 
-### Block Rules:
+## 3. Configuration Evidence (GUI Validation)
+> **Functional Purpose:** Verification of the "Control Plane" ensures the rules are active in the software before we test them in the field.
 
-| Rule | Protocol | Port | Description |
-|------|----------|------|-------------|
-| SMB | TCP | 445 | Block SMB lateral movement |
-| SSH | TCP | 22 | Block SSH lateral movement |
-| RDP | TCP | 3389 | Block RDP lateral movement |
-
-### Configuration Details:
-
-- Source: `Any`
-- Destination: `Any`
-- Rules placed **above default allow rule**
-- Changes applied successfully
+![Screenshot: pfSense Rule Configuration](./Screenshoots/pfSense-RDP-rule.png)
+* **Rule Analysis:** This screenshot confirms the "Block" action is applied correctly to the LAN interface, placed above the allow rules to ensure immediate packet dropping.
 
 ---
 
-##  Testing After Hardening
+## 4. Phase 1 Audit: The "Bypass" Discovery
+> **Functional Purpose:** Security is only effective if the traffic is actually forced through the checkpoint. During initial validation, a critical architectural "blind spot" was identified.
 
-### Commands executed from Kali Linux:
+### **Validation Results (Initial Scan):**
+* `nmap -p 22 192.168.56.120` -> **Filtered** ✅
+* `nmap -p 3389 192.168.56.120` -> **Filtered** ✅
+* `nmap -p 445 192.168.56.120` -> **OPEN** ❌
 
-```bash
-nmap -p 22 192.168.56.120
-nmap -p 445 192.168.56.120
-nmap -p 3389 192.168.56.120
-```
-## Results
-Port  Service  State
-22    SSH      Filtered
-3389  RDP      Filtered
-445   SMB      OPEN ❌
-## Key Finding
-Despite firewall rules being correctly configured, SMB traffic (port 445) remained accessible.
-This indicates that:
-Network traffic was not being routed through pfSense.
+### **Root Cause Analysis (The "Flat Network" Issue):**
+The lab was initially operating in a **Layer 2 Flat Network**. Because systems were on the same VirtualBox Host-Only subnet without enforced routing:
+1. **Traffic Flow:** `Kali Node` $\rightarrow$ `Windows Target` (Direct communication).
+2. **The Result:** Traffic bypassed the **pfSense Gateway** entirely. The "Security Guard" never saw the packets, rendering the firewall rules ineffective for SMB.
 
-## Root Cause Analysis
+## 5. Remediation & Engineering Lessons
+> **Strategic Note:** A firewall is not a "magic box"; it is a checkpoint. If there is a "back alley" (Layer 2 direct path), the checkpoint is useless. 
 
-The lab was operating in a flat network architecture using a VirtualBox Host-Only network.
-Traffic Flow:
-
-Kali → Windows (direct communication)
-Instead of:
-
-Kali → pfSense → Windows
-Because of this:
-pfSense firewall rules were bypassed
-Systems communicated directly at Layer 2
-No enforcement of security policies
-
-## Security Implication
-This configuration represents a common real-world issue:
-Flat networks allow unrestricted lateral movement
-Firewalls are ineffective if traffic does not pass through them
-Attackers can bypass segmentation controls
-## Lessons Learned
-Firewall rules alone are not sufficient
-Proper network architecture is critical
-Traffic must be forced through security controls
-Segmentation is required to prevent lateral movement
-
-## Next Steps (Phase 2)
-
-To properly enforce firewall rules:
-Configure all systems to use pfSense as the default gateway (192.168.56.1)
-Ensure traffic is routed through pfSense
-Retest blocked ports (SMB, SSH, RDP)
-Document "Before vs After" behavior
-
-## Conclusion
-
-This phase demonstrated that:
-A firewall is only effective if it is placed in the actual traffic path.
-This finding highlights the importance of proper network design in cybersecurity.
+### **Key Takeaways:**
+* **Routing is Security:** Proper network architecture is as important as the rules themselves.
+* **Gateway Enforcement:** In Phase 2, all systems were reconfigured to use **192.168.56.1** as the absolute default gateway, forcing all "East-West" traffic through the pfSense inspection engine.
+* **Validation is Mandatory:** Without the Nmap audit, we would have *assumed* we were secure while remaining vulnerable.
