@@ -16,6 +16,8 @@
 > **Functional Purpose:** This is the "Security Camera" phase. We used the **Kali Linux** security testing node to simulate a brute-force attack on the SMB port. The goal was to see if our SIEM (Wazuh) would alert us to the unauthorized entry attempt.
 
 * **The Trigger:** Brute-force simulation targeting Port 445 (SMB).
+* **Evidence:** ![Screenshot 1.0: Hydra Brute-Force Simulation from Kali Linux](./Screenshoot/Kali-Attack.png)
+  * **Screenshot 1.0:** Demonstrates the successful execution of the attack utility against the target's SMB service.
 * **Detection:** Wazuh triggered a **Level 10 Alert: Multiple Failed Logins**.
 * **Analysis:** Analysis confirmed that the legacy SMB configuration allowed an attacker to enumerate user accounts, posing a severe risk to data integrity.
 
