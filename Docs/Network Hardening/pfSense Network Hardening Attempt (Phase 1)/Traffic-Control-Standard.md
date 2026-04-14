@@ -1,5 +1,6 @@
-# Technical Standard: pfSense Network Hardening & Traffic Control
+# Engineering Standard: Network Traffic Control & Perimeter Hardening
 **Project:** Hybrid Private Cloud Architecture  
+**Role:** Perimeter Security & Internal Segmentation  
 **Gateway IP:** `192.168.56.1`
 
 ---
