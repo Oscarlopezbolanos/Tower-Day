@@ -21,7 +21,7 @@
 Our environment is divided into four high-integrity VLANs, each serving a unique functional purpose within the security ecosystem.
 
 ### **The Architecture Blueprint:**
-![Screenshot: Segmented Network Architecture](./Screenshots/Segmented-Network.png)
+![Screenshot: Segmented Network Architecture](./Screenshots/Segmented-Architecture.png)
 
 | Segment | Purpose | Subnet | Security Posture |
 | :--- | :--- | :--- | :--- |
