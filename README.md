@@ -47,16 +47,16 @@ To explore the technical standards and NIST-aligned incident reports, navigate t
 
 ---
 
+## 4. Professional Impact
+This project follows the **NIST SP 800-61 Rev. 2** incident response framework and utilizes the **MITRE ATT&CK** matrix to categorize threats. It serves as a proof-of-concept for how small-to-medium businesses can achieve enterprise-level security visibility using open-source tooling.
+
+--
+
 ## Enterprise Hardening Roadmap (Recommendations)
 To move this architecture from "Detection" to "Resilience," we recommend the following identity defense enhancements:
 * **Multi-Factor Authentication (MFA):** Implementation of TOTP or Duo to secure administrative access points.
 * **SSH Key-Based Authentication:** Disabling password-based logins entirely to neutralize dictionary and brute-force attacks.
 * **Identity Provider (IdP) Integration:** Centralizing user management to enforce the **Principle of Least Privilege (PoLP)** across all cloud services.
-
----
-
-## 4. Professional Impact
-This project follows the **NIST SP 800-61 Rev. 2** incident response framework and utilizes the **MITRE ATT&CK** matrix to categorize threats. It serves as a proof-of-concept for how small-to-medium businesses can achieve enterprise-level security visibility using open-source tooling.
 
 ---
 
