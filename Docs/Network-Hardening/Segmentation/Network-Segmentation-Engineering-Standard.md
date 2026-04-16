@@ -17,7 +17,7 @@
 ## 1. Strategic Intent
 The objective of this standard is to eliminate "Linear" network vulnerabilities. In a traditional small business network, a compromise on a single workstation (VLAN 30) would allow an attacker to reach the database server (VLAN 40) or the SIEM (VLAN 10) without resistance. This standard mandates a **Stateful Firewall Gateway** (pfSense) to act as a "Choke Point" for all East-West traffic.
 
-
+---
 
 ## 2. Technical Implementation: Segmented Topology
 The architecture is structured into four high-integrity Virtual Local Area Networks (VLANs). No traffic is permitted to traverse these boundaries without explicit inspection.
