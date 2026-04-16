@@ -1,18 +1,28 @@
-# Design and Security Hardening of a Hybrid Private Cloud Architecture
-**Academic Research Project | Columbus State University Tower Day 2026** **Architects:** Oscar Lopez-Bolanos & Patrick Cassibry  
+# Design and Security Hardening of a Hybrid Private Cloud Architecture 
+Research Project for CSU Tower Day April 2026
 
+Oscar Lopez-Bolanos & Patrick Cassibry
 ---
 
-## 1. Executive Summary
+## 1. Project Overview
 This project demonstrates the engineering and validation of a **Zero Trust** hybrid cloud environment designed for small business resilience. By integrating a centralized **Wazuh SIEM (SOC)** with a **pfSense-managed network**, we have built an architecture that not only defends against modern threats but provides full forensic visibility into every stage of the cyber kill chain.
+
+### **Network Evolution: From Flat to Zero Trust**
+
+| **Before: Traditional Flat Network** | **After: Zero Trust Segmented Architecture** |
+| :---: | :---: |
+| ![Flat_Network](./Docs/Baseline-Configurations/Screenshot/Flat_Network.png) | ![Segmented_Architecture](./Docs/Network-Hardening/Segmentation/Screenshots/Segmented-Architecture.png) |
+| *Vulnerable "Flat" configuration where all devices share a single broadcast domain, allowing unrestricted lateral movement.* | *Hardened Enterprise-scale architecture utilizing VLANs and pfSense to enforce Zero Trust Isolation and Micro-segmentation.* |
+
+> **Validation & Engineering:** The technical implementation of this transition is documented in our [**Network Segmentation Engineering Standard**](./Docs/Network-Hardening/Segmentation/Network-Segmentation-Engineering-Standard.md) and validated via our [**NIST Incident Response Report**](./Docs/Network-Hardening/Segmentation/NIST-Incident-Response-Segmentation.md).
+
+---
 
 ## 2. The Core Architecture
 Our environment is built on three fundamental pillars of security engineering:
 1. **Network Authority:** A pfSense gateway enforcing micro-segmentation and ICMP suppression.
 2. **Endpoint Integrity:** Hardened Linux and Windows nodes utilizing FIM (File Integrity Monitoring).
 3. **Identity Defense:** Multi-factor authentication (MFA) and SSH key enforcement to neutralize credential-based attacks.
-
-
 
 ---
 
@@ -37,19 +47,27 @@ To explore the technical standards and NIST-aligned incident reports, navigate t
 
 ---
 
+## Enterprise Hardening Roadmap (Recommendations)
+To move this architecture from "Detection" to "Resilience," we recommend the following identity defense enhancements:
+* **Multi-Factor Authentication (MFA):** Implementation of TOTP or Duo to secure administrative access points.
+* **SSH Key-Based Authentication:** Disabling password-based logins entirely to neutralize dictionary and brute-force attacks.
+* **Identity Provider (IdP) Integration:** Centralizing user management to enforce the **Principle of Least Privilege (PoLP)** across all cloud services.
+
+---
+
 ## 4. Professional Impact
 This project follows the **NIST SP 800-61 Rev. 2** incident response framework and utilizes the **MITRE ATT&CK** matrix to categorize threats. It serves as a proof-of-concept for how small-to-medium businesses can achieve enterprise-level security visibility using open-source tooling.
 
 ---
 
 ## 🛡️ Glossary of Architectural Principles
-*To assist stakeholders across all technical levels, we have defined the core philosophies of this architecture:*
-
 * **Zero Trust:** A security model that assumes the "perimeter" is already breached. It requires every user and device to be verified, even if they are already inside the network.
-* **Defense-in-Depth:** A layered defense strategy. If the firewall fails, the host security catches it; if the host security fails, the MFA stops it.
-* **The CIA Triad:** The fundamental goals of security: **Confidentiality** (keeping data secret), **Integrity** (ensuring data isn't tampered with), and **Availability** (ensuring systems stay running).
-* **Cyber Kill Chain:** A framework for identifying the stages of a cyberattack. This project validates detections for Reconnaissance, Exploitation, and Lateral Movement.
-* **Principle of Least Privilege (PoLP):** The practice of limiting access rights for users to the bare minimum permissions they need to perform their work.
-* **Micro-segmentation:** Dividing a network into small, isolated zones to prevent an intruder from moving "sideways" through the environment.
+* **Micro-segmentation:** The practice of dividing a network into small, isolated zones (VLANs). This ensures that if one area is compromised, the threat is "trapped" and cannot spread.
+* **Lateral Movement:** The process an attacker uses to "hop" from one compromised machine to another within a network.
+* **Reconnaissance:** The preliminary "scouting" phase of an attack where an intruder maps out the network to find targets (e.g., using Nmap).
+* **Defense-in-Depth:** A layered defense strategy. If the firewall fails, the host security catches it; if the host fails, the SIEM alerts the admin.
+* **The CIA Triad:** The fundamental goals of security: **Confidentiality** (Privacy), **Integrity** (Data Accuracy), and **Availability** (Uptime).
 * **SIEM (Security Information & Event Management):** The "Central Brain" (Wazuh) that collects and analyzes logs from every computer to find signs of an attack.
-Why this is the "Final Touch":
+
+---
+*Developed for CSU Tower Day 2026. For technical inquiries or forensic data review, please contact the architects.*
