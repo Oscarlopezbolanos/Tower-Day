@@ -7,6 +7,8 @@
 ## 1. Strategic Overview
 > **Functional Purpose:** To establish a "Security Camera" (Wazuh) on the "Digital Filing Cabinet" (Nextcloud), the Ubuntu server required integration into the SOC monitoring environment. This log documents a sequential chain of technical hurdles encountered during a manual "Bare Metal" installation and the subsequent network alignment required for a secure build.
 
+---
+
 ## 2. Infrastructure Inventory (Deployment Phase)
 | Component | Role | IP Address | Status |
 | :--- | :--- | :--- | :--- |
@@ -49,6 +51,8 @@ The SOC dashboard now confirms successful ingestion from the Cloud Lab server.
 | **Cloud Lab Server** | **Active** | Verified via SIEM Telemetry |
 | **Kali Linux** | **Active** | Verified |
 | **Windows Guest** | Disconnected | Scheduled for Re-alignment |
+
+---
 
 ## 5. Engineering Takeaways
 > **Strategic Note:** This deployment highlighted the **"Version Match Rule"** in security architecture: an agent can never be newer than its manager. Furthermore, it proved that manual "Bare Metal" configuration is the only way to ensure placeholders like `MANAGER_IP` are correctly mapped, preventing "blind spots" in the monitoring network.
